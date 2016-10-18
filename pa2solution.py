@@ -14,13 +14,47 @@ import random
 
 
 def free_time_intervals(interval_lst, T):
-    # First design the algorithm on pen/paper before you attempt this
-    return None
+    sortedLst = sorted(interval_lst, key=lambda x:x[0])
+    freetime = []
+    start = 0;
+    end = 0;
+    #Processes each tuple, finding 'blocks' during which there are users logged in
+    for i in range(len(interval_lst)):
+        #If u_i is greater than or equal to T
+        if (start >= T or end >= T):
+            break
+        if (end < sortedLst[i][0]):
+            if (sortedLst[i][0] < T):
+                freetime.append((end, sortedLst[i][0]))
+            else:
+                freetime.append((end, T))
+        start = sortedLst[i][0]
+        if (end < sortedLst[i][1]):
+            end = sortedLst[i][1]
+    if (end < T):
+        freetime.append((end, T))
+    return freetime
 
 def max_logged_in(interval_lst,T):
-    # First design the algorithm on pen/paper and solve a few examples.
-    return None
-
+    count = 0
+    maxNum = 0
+    maxTime = 0
+    DecoupledLst = []
+    for i in range(len(interval_lst)):
+        DecoupledLst.append(('i', interval_lst[i][0]))
+        DecoupledLst.append(('d', interval_lst[i][1]))
+    DecoupledLst.sort(key=lambda x:x[1])
+    for j in range(len(DecoupledLst)):
+        if (DecoupledLst[j][1] > T):
+            break
+        if (DecoupledLst[j][0] == 'i'):
+            count += 1
+        else:
+            count -= 1
+        if (count > maxNum):
+            maxNum = count
+            maxTime = DecoupledLst[j][1]
+    return (maxNum, maxTime)
 
 
 if __name__ == '__main__':
